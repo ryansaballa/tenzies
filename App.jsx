@@ -15,23 +15,31 @@ const diceElements = dice.map(dieObject =>
         hold={()=> hold(dieObject.id)}
     />)
 
-function rollDice() {
-    setDice(generateAllNewDice())
-}
-
 function generateAllNewDice (){
         return new Array(10)
             .fill(0)
             .map(()=> ({
                 value:Math.ceil(Math.random()*6),
-                isHeld: true,
+                isHeld: false,
                 id: nanoid(),
             }))
 }
 
-function hold(id){
-    console.log(id)
+function rollDice(id) {
+    setDice(oldDice => oldDice.map(die => 
+        die.isHeld? die: {
+            ...die, value: Math.ceil(Math.random()*6)
+        }
+    ))
 }
+
+
+function hold(id) {
+        setDice(oldDice =>
+            oldDice.map(die =>
+                die.id === id ? { ...die, isHeld: !die.isHeld }
+                : die))
+    }
 
 
     return (
